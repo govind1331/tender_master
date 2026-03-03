@@ -1,0 +1,62 @@
+[
+  {
+    "question": "Do you hold ISO 9001 certification for your quality management system?",
+    "answer": "Yes. Our quality management system is certified to ISO 9001:2015 by an accredited third-party certification body. We undergo annual surveillance audits and a full recertification audit every three years. Our current certificate is valid until 31 March 2027 and is available on request.",
+    "domain": "Quality",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "Describe your approach to data security and protection of personal data.",
+    "answer": "We implement a layered security model aligned with ISO 27001. All personal data is processed in accordance with applicable data protection legislation. Data at rest is encrypted using AES-256 and data in transit uses TLS 1.3. Access is controlled via role-based permissions and reviewed quarterly. We conduct annual penetration tests and maintain a formal incident response plan.",
+    "domain": "Security",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "Does the platform enforce TLS 1.2 or higher?",
+    "answer": "Yes. Our platform enforces a minimum of TLS 1.2 for all data in transit. TLS 1.3 is supported and preferred. Legacy SSL and TLS 1.0/1.1 are disabled across all environments. Cipher suites are reviewed quarterly to ensure alignment with current security standards.",
+    "domain": "Security",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "What is your policy on business continuity and disaster recovery?",
+    "answer": "We maintain a documented Business Continuity Plan (BCP) and Disaster Recovery Plan (DRP) that are reviewed and tested annually. Our recovery time objective (RTO) is four hours and our recovery point objective (RPO) is one hour for critical systems. Offsite backups are taken daily and stored in a geographically separate data centre.",
+    "domain": "Risk",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "How do you manage supplier and third-party risk?",
+    "answer": "All third-party suppliers undergo a formal due diligence process before engagement, including security assessments and financial health checks. Contracts include data processing agreements and right-to-audit clauses. Supplier risk is reviewed annually and escalated to our risk committee where material risks are identified.",
+    "domain": "Risk",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "What are your commitments to environmental sustainability?",
+    "answer": "We are committed to reducing our environmental impact and have set a target to achieve net-zero carbon emissions by 2035. Our offices run on 100% renewable electricity and we have implemented a waste reduction and recycling programme. We publish an annual sustainability report aligned with GRI standards.",
+    "domain": "Sustainability",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "Describe your approach to equality, diversity and inclusion.",
+    "answer": "We are an equal opportunity employer committed to building a diverse and inclusive workforce. We have a formal EDI policy, conduct annual pay gap reporting, and run targeted programmes to improve representation at all levels. All staff complete mandatory unconscious bias training.",
+    "domain": "People",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "What social value commitments can you offer?",
+    "answer": "We actively support local communities through our social value programme, which includes apprenticeship schemes, graduate placements from underrepresented backgrounds, and partnerships with local charities. We target a minimum of two percent of contract value towards measurable social value outcomes.",
+    "domain": "Social Value",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "How is your board structured and what governance mechanisms are in place?",
+    "answer": "Our board comprises six directors including two independent non-executive directors. We operate formal audit, risk, and remuneration sub-committees. Board papers are circulated seven days in advance and minutes are recorded. We adhere to the UK Corporate Governance Code on a comply-or-explain basis.",
+    "domain": "Governance",
+    "source_file": "tender_bank_2023.json"
+  },
+  {
+    "question": "What relevant experience do you have delivering similar projects?",
+    "answer": "We have over fifteen years of experience delivering enterprise software solutions across the public and private sectors. Recent projects include a digital transformation programme for a UK local authority and a data platform for a national healthcare provider. Case studies and references are available on request.",
+    "domain": "Experience",
+    "source_file": "tender_bank_2023.json"
+  }
+]

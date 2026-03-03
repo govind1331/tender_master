@@ -1,0 +1,278 @@
+{
+  "info": {
+    "_postman_id": "658649aa-6fa8-4968-8c30-7980c14cfc08",
+    "name": "Pan Software — Tender Automation API Copy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51979887",
+    "_collection_link": "https://go.postman.co/collection/51979887-658649aa-6fa8-4968-8c30-7980c14cfc08?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "1. Ingest Historical QA (Excel)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "description": "Historical QA Excel file",
+              "src": "data/historical/historical_qa.xlsx"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/historical/ingest",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "historical",
+            "ingest"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Accepted",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "Historical QA Excel file",
+                  "src": "data/historical/historical_qa.xlsx"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/historical/ingest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "historical",
+                "ingest"
+              ]
+            }
+          },
+          "status": "OK",
+          "_postman_previewlanguage": "Text",
+          "header": [],
+          "cookie": [],
+          "body": "{\n  \"task_id\": \"abc-def-123\",\n  \"status\": \"accepted\",\n  \"message\": \"Ingestion of 'historical_qa.xlsx' queued.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "2. Check Historical Store Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/historical/status",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "historical",
+            "status"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Status",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/historical/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "historical",
+                "status"
+              ]
+            }
+          },
+          "status": "OK",
+          "_postman_previewlanguage": "Text",
+          "header": [],
+          "cookie": [],
+          "body": "{\n  \"stored_chunks\": 10\n}"
+        }
+      ]
+    },
+    {
+      "name": "3. Process New Tender",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "description": "New tender questionnaire Excel",
+              "src": "data/sample_new_tender.xlsx"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tender/process",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "tender",
+            "process"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Accepted",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "New tender questionnaire Excel",
+                  "src": "data/sample_new_tender.xlsx"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/tender/process",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tender",
+                "process"
+              ]
+            }
+          },
+          "status": "OK",
+          "_postman_previewlanguage": "Text",
+          "header": [],
+          "cookie": [],
+          "body": "{\n  \"task_id\": \"xyz-789\",\n  \"status\": \"accepted\",\n  \"message\": \"Tender queued for processing.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "4. Poll Job Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/jobs/{{task_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "{{task_id}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Completed",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/jobs/{{task_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs",
+                "{{task_id}}"
+              ]
+            }
+          },
+          "status": "OK",
+          "_postman_previewlanguage": "Text",
+          "header": [],
+          "cookie": [],
+          "body": "{\n  \"task_id\": \"xyz-789\",\n  \"status\": \"SUCCESS\",\n  \"result\": {\n    \"session_id\": \"sess-001\",\n    \"source_filename\": \"sample_new_tender.xlsx\",\n    \"total_questions\": 15,\n    \"completed\": 15,\n    \"failed\": 0,\n    \"flagged_count\": 1,\n    \"overall_status\": \"completed_with_flags\",\n    \"answers\": [\n      {\n        \"question_index\": 0,\n        \"original_question\": \"Do you support SSL and TLS encryption for data in transit?\",\n        \"generated_answer\": \"Yes. We enforce TLS 1.3 as the preferred protocol for all data in transit, with TLS 1.2 as the minimum supported version. Legacy SSL and TLS 1.0/1.1 are disabled across all environments. Cipher suites are reviewed quarterly.\",\n        \"domain\": \"Security\",\n        \"confidence_level\": \"high\",\n        \"confidence_score\": 0.91,\n        \"historical_alignment\": {\n          \"has_history\": true,\n          \"best_similarity_score\": 0.9234,\n          \"matched_sources\": [\n            { \"source_file\": \"tender_bank_2023.xlsx\", \"domain\": \"Security\", \"similarity\": 0.9234 }\n          ]\n        },\n        \"consistency\": {\n          \"is_consistent\": true,\n          \"notes\": \"Answer aligns with historical TLS positioning.\"\n        },\n        \"risk_assessment\": {\n          \"risk_level\": \"low\",\n          \"is_flagged\": false,\n          \"notes\": \"Well-supported claim grounded in historical data.\"\n        },\n        \"status\": \"completed\",\n        \"error\": null\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "5. Check session result",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/sessions/{{session_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sessions",
+            "{{session_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    }
+  ]
+}

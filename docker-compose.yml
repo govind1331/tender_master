@@ -1,0 +1,163 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL + pgvector ──────────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tender_db
+      POSTGRES_USER: tender_user
+      POSTGRES_PASSWORD: tender_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tender_user -d tender_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────────────────────
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  redis:
+    # CHANGE: From 'redis:latest' or 'redis:alpine'
+    image: redis/redis-stack-server:latest 
+    ports:
+      - "6379:6379"
+   
+    volumes:
+      - redis_data:/data
+    # CHANGE: Re-added healthcheck so dependent services can start
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Ollama — local LLM inference ──────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama    # persists pulled model weights across restarts
+    # Start the server normally — model is pulled by the ollama-init sidecar below
+    # DO NOT override entrypoint here; the default `ollama serve` is correct
+    healthcheck:
+      # Healthy only when the API responds AND the model is loaded in the registry
+      test: ["CMD-SHELL", "ollama list | grep -q llama3.2:3b"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  # ── Ollama init — pulls the model once, then exits ────────────────────────
+  # Runs as a separate one-shot container so the main ollama service stays
+  # clean and its healthcheck reliably reflects actual readiness.
+  ollama-init:
+    image: ollama/ollama:latest
+    restart: "no"          # run once and exit
+    entrypoint: ["/bin/sh", "-c", "ollama pull llama3.2:3b"]
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+
+  # ── FastAPI ────────────────────────────────────────────────────────────────
+  api:
+    build: .
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - checkpoint_data:/tmp/langgraph_checkpoints
+      - hf_cache:/root/.cache/huggingface  
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy    
+      ollama-init:
+        condition: service_completed_successfully
+
+  # ── Celery worker — RAG ingestion ─────────────────────────────────────────
+  worker-ingestion:
+    build: .
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info -Q ingestion -c 2 -n ingestion@%h
+    env_file: .env
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Celery worker — orchestration (dispatch + aggregate, no LLM calls) ─────
+  worker-orchestration:
+    build: .
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info -Q orchestration -c 4 -n orchestration@%h
+    env_file: .env
+    volumes:
+      - checkpoint_data:/tmp/langgraph_checkpoints
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Celery worker — agents (retrieve, answer, consistency, risk, format) ───
+  # Each question's chain runs here. Scale with: docker-compose up --scale worker-agents=3
+  worker-agents:
+    build: .
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info -Q agents -c 2 -n agents@%h
+    env_file: .env
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy   
+      ollama-init:
+        condition: service_completed_successfully
+
+  # ── Flower — Celery monitoring ─────────────────────────────────────────────
+  flower:
+    build: .
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    env_file: .env
+    depends_on:
+      - redis
+
+volumes:
+  postgres_data:
+  checkpoint_data:
+  ollama_data:       # persists Ollama model weights
+  hf_cache:          # persists HuggingFace sentence-transformer weights
+  redis_data:        # persists Redis checkpoints

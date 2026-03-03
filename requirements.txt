@@ -1,0 +1,39 @@
+fastapi
+uvicorn[standard]
+celery[redis]
+flower
+redis
+
+# LangGraph / LangChain
+langgraph
+langgraph-checkpoint-redis
+langchain
+langchain-community
+langchain-ollama
+
+# Database
+sqlalchemy
+asyncpg
+psycopg2-binary
+pgvector
+alembic
+
+# File processing
+openpyxl
+pandas
+python-multipart
+
+# Embeddings — HuggingFace sentence-transformers (local, no API key needed)
+sentence-transformers
+numpy
+
+# Ollama HTTP client
+ollama
+
+# Utilities
+pydantic
+pydantic-settings
+python-dotenv
+httpx
+tenacity
+structlog
