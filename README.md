@@ -198,7 +198,7 @@ Upload historical Q&A pairs before processing any tenders. The Excel file must h
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/historical/ingest \
-  -F "file=@data/historical/sample_knowledge_base.xlsx"
+  -F "file=@data/historical/historical_qa.xlsx"
 ```
 
 Check how many chunks are stored:
@@ -211,7 +211,7 @@ curl http://localhost:8000/api/v1/historical/status
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/tender/process \
-  -F "file=@data/tenders/new_tender_input.xlsx"
+  -F "file=@data/new_tender_input.xlsx"
 ```
 
 Response:
